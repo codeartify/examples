@@ -2,17 +2,15 @@ package com.codeartify.examples.oneclassonetest;
 
 
 import com.codeartify.examples.oneclassonetest.oneclassonetest.AService;
-import com.codeartify.examples.oneclassonetest.oneclassonetest.BService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 public class AServiceBetterTest {
 
     @Test
     void test() {
-        var aService = new AService(new BService());
+        var aService = AService.create();
 
         String result = aService.invoke();
 
@@ -21,7 +19,7 @@ public class AServiceBetterTest {
 
     @Test
     void test2() {
-        var aService = new AService(new BService());
+        var aService = AService.create();
 
         aService.invoke();
         String result = aService.invoke();

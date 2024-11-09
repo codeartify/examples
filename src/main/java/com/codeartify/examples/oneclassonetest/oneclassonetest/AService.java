@@ -1,6 +1,10 @@
 package com.codeartify.examples.oneclassonetest.oneclassonetest;
 
 public class AService {
+    public static AService create() {
+        return new AService(new BService());
+    }
+
     private final BService bService;
 
     public AService(BService bService) {
