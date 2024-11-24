@@ -29,18 +29,12 @@ public class Circle extends Shape {
 			throw new RuntimeException("Not every provided x coordinate has a matching y coordinate");
 		}
 
-        IntStream.range(0, xCords.length).forEach(i -> evaluate(xCords, yCords, i));
+        IntStream.range(0, xCords.length)
+				.mapToObj(i -> new Point(xCords[i], yCords[i]))
+				.filter(this::contains)
+				.forEach(point -> this.numberOfContainedPoints++);
 
-		return numberOfContainedPoints;
-	}
-
-	private void evaluate(int[] xCords, int[] yCords, int i) {
-
-		var point = new Point(xCords[i], yCords[i]);
-
-        if (contains(point)) {
-			this.numberOfContainedPoints++;
-		}
+        return numberOfContainedPoints;
 	}
 
 	private boolean contains(Point point) {
