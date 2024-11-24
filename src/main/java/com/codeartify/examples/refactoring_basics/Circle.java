@@ -4,7 +4,7 @@ package com.codeartify.examples.refactoring_basics;
 import java.util.stream.IntStream;
 
 public class Circle extends Shape {
-	private int r;
+	private int radius;
 	private Point center;
 	private final Color color = new Color("Green");
 	private int numberOfContainedPoints;
@@ -13,7 +13,7 @@ public class Circle extends Shape {
 		if (r <= 0) {
 			throw new RuntimeException("Radius needs to be larger 0");
 		}
-		this.r = r;
+		this.radius = r;
 		this.center = center;
 	}
 
@@ -35,7 +35,7 @@ public class Circle extends Shape {
 	}
 
 	private void evaluate(int[] xCords, int[] yCords, int i) {
-		var result = (xCords[i] - this.center.x()) * (xCords[i] - this.center.x()) + (yCords[i] - this.center.y()) * (yCords[i] - this.center.y()) <= r * r;
+		var result = (xCords[i] - this.center.x()) * (xCords[i] - this.center.x()) + (yCords[i] - this.center.y()) * (yCords[i] - this.center.y()) <= radius * radius;
 
 		if (result) {
 			this.numberOfContainedPoints++;
@@ -47,14 +47,14 @@ public class Circle extends Shape {
 	}
 
 	public void resize(int r) {
-		this.r = r;
+		this.radius = r;
 	}
 
 	@Override
 	public String format() {
 		return "circle: {" +
 				"\n\tcenter: (" + this.center.x() + "," + this.center.y() + ") " +
-				"\n\tradius: " + this.r +
+				"\n\tradius: " + this.radius +
 				"\n\tcolor: " + this.color.getColorFormatted(false)
 				+ "\n}";
 	}
