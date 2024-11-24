@@ -38,13 +38,7 @@ public class Circle extends Shape {
 	}
 
 	private boolean contains(Point point) {
-		var deltaX = point.x() - this.center.x();
-		var deltaY = point.y() - this.center.y();
-        return square(deltaX) + square(deltaY) <= square(radius);
-	}
-
-	private static int square(int deltaX) {
-		return deltaX * deltaX;
+        return center.distanceTo(point) <= radius;
 	}
 
 	public void moveTo(int x, int y) {
