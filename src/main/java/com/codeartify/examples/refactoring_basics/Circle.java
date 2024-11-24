@@ -35,7 +35,8 @@ public class Circle extends Shape {
 	}
 
 	private void evaluate(int[] xCords, int[] yCords, int i) {
-		var result = (xCords[i] - this.center.x()) * (xCords[i] - this.center.x()) + (yCords[i] - this.center.y()) * (yCords[i] - this.center.y()) <= radius * radius;
+		var deltaX = xCords[i] - this.center.x();
+		var result = deltaX * deltaX + (yCords[i] - this.center.y()) * (yCords[i] - this.center.y()) <= radius * radius;
 
 		if (result) {
 			this.numberOfContainedPoints++;
