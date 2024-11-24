@@ -35,13 +35,18 @@ public class Circle extends Shape {
 	}
 
 	private void evaluate(int[] xCords, int[] yCords, int i) {
-		var deltaX = xCords[i] - this.center.x();
-		var deltaY = yCords[i] - this.center.y();
-		var result = square(deltaX) + square(deltaY) <= square(radius);
 
-		if (result) {
+		var point = new Point(xCords[i], yCords[i]);
+
+        if (contains(point)) {
 			this.numberOfContainedPoints++;
 		}
+	}
+
+	private boolean contains(Point point) {
+		var deltaX = point.x() - this.center.x();
+		var deltaY = point.y() - this.center.y();
+        return square(deltaX) + square(deltaY) <= square(radius);
 	}
 
 	private static int square(int deltaX) {
