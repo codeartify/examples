@@ -4,17 +4,17 @@ package com.codeartify.examples.refactoring_basics;
 import java.util.stream.IntStream;
 
 public class Circle extends Shape {
-	private int radius;
-	private Point center;
+	private int r;
+	private Point c;
 	private final Color color = new Color("Green");
 	private int numberOfContainedPoints;
 
-	public Circle(int radius, Point center) {
-		if (radius <= 0) {
+	public Circle(int r, Point c) {
+		if (r <= 0) {
 			throw new RuntimeException("Radius needs to be larger 0");
 		}
-		this.radius = radius;
-		this.center = center;
+		this.r = r;
+		this.c = c;
 	}
 
 	public int countContainedPoints(int[] xCords, int[] yCords) {
@@ -35,7 +35,7 @@ public class Circle extends Shape {
 	}
 
 	private void evaluate(int[] xCords, int[] yCords, int i) {
-		var result = (xCords[i] - this.center.x()) * (xCords[i] - this.center.x()) + (yCords[i] - this.center.y()) * (yCords[i] - this.center.y()) <= radius * radius;
+		var result = (xCords[i] - this.c.x()) * (xCords[i] - this.c.x()) + (yCords[i] - this.c.y()) * (yCords[i] - this.c.y()) <= r * r;
 
 		if (result) {
 			this.numberOfContainedPoints++;
@@ -43,18 +43,18 @@ public class Circle extends Shape {
 	}
 
 	public void moveTo(int x, int y) {
-		this.center = new Point(x, y);
+		this.c = new Point(x, y);
 	}
 
 	public void resize(int r) {
-		this.radius = r;
+		this.r = r;
 	}
 
 	@Override
 	public String format() {
 		return "circle: {" +
-				"\n\tcenter: (" + this.center.x() + "," + this.center.y() + ") " +
-				"\n\tradius: " + this.radius +
+				"\n\tcenter: (" + this.c.x() + "," + this.c.y() + ") " +
+				"\n\tradius: " + this.r +
 				"\n\tcolor: " + this.color.getColorFormatted(false)
 				+ "\n}";
 	}
