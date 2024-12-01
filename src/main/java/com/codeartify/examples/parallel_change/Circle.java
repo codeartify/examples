@@ -4,6 +4,7 @@ package com.codeartify.examples.parallel_change;
 public class Circle {
     private int x;
     private int y;
+    private Point center;
 	private int radius;
 
     public Circle(int x, int y, int radius) {
