@@ -1,9 +1,7 @@
 package com.codeartify.examples.parallel_change;
 
 
-import com.codeartify.examples.refactoring_basics.Shape;
-
-public class Circle extends Shape {
+public class Circle {
     private int x;
     private int y;
 	private int radius;
@@ -26,8 +24,7 @@ public class Circle extends Shape {
 	public void resize(int radius) {
 		this.radius = radius;
 	}
-
-	@Override
+ 
 	public String format() {
 		return "circle: {" +
 			   "\n\tcenter: (" + this.x + "," + this.y + ") " +
