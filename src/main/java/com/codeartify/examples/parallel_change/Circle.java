@@ -15,7 +15,6 @@ public class Circle extends Shape {
     }
 
     public boolean contains(int x, int y) {
-
         return (x - this.x) * (x - this.x) + (y - this.y) * (y - this.y) <= radius * radius;
     }
 
