@@ -1,4 +1,4 @@
-package com.codeartify.examples.oneclassonetest.oneclassonetest;
+package com.codeartify.examples.oneclassonetest;
 
 public class AService {
     public static AService create() {
