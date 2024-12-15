@@ -1,27 +1,27 @@
 package com.codeartify.examples.parallel_change_for_red_to_green;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Stack {
-    private final List<Integer> elements = new ArrayList<>();
+    private int size;
+    private int element;
 
     public boolean isEmpty() {
-        return elements.isEmpty();
+        return size == 0;
     }
 
     public void push(int element) {
-        this.elements.add(element);
+        this.element = element;
+        size++;
     }
 
     public int pop() {
-        if (isEmpty()) {
+        if (size == 0) {
             throw new EmptyStackPoppedException();
         }
-        return elements.removeLast();
+        size--;
+        return element;
     }
 
     public int size() {
-        return elements.size();
+        return size;
     }
 }
