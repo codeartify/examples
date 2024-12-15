@@ -1,6 +1,7 @@
 package com.codeartify.examples.parking_spot_reservation.controller;
 
 import com.codeartify.examples.parking_spot_reservation.dto.ParkingReservationRequest;
+import com.codeartify.examples.parking_spot_reservation.dto.ParkingReservationResponse;
 import com.codeartify.examples.parking_spot_reservation.model.ParkingReservation;
 import com.codeartify.examples.parking_spot_reservation.model.ParkingSpot;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationRepository;
@@ -35,7 +36,9 @@ public class ParkingSpotReservationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Spot not available.");
         }
 
-        if (!request.isNeedsEVCharging() || spot.isHasEVCharging()) {
+        if (request.isNeedsEVCharging() && !spot.isHasEVCharging()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Spot does not meet requirements.");
+        } else {
             ParkingReservation reservation = new ParkingReservation(
                     request.getReservedBy(),
                     spot.getId(),
@@ -45,9 +48,16 @@ public class ParkingSpotReservationController {
             parkingReservationRepository.save(reservation);
             spot.setAvailable(false);
             parkingSpotRepository.save(spot);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Spot reserved.");
+
+            var body = new ParkingReservationResponse();
+            body.setSpotId(spot.getId());
+            body.setReservationId(reservation.getId());
+            body.setReservedBy(request.getReservedBy());
+            body.setStartTime(request.getStartTime());
+            body.setEndTime(request.getEndTime());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(body);
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Spot does not meet requirements.");
     }
 }
