@@ -3,7 +3,6 @@ package com.codeartify.examples.parallel_change_for_red_to_green;
 
 import org.junit.jupiter.api.Test;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class StackShould {
