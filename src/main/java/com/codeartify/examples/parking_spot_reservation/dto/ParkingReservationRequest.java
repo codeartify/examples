@@ -14,10 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParkingReservationRequest {
-    private Long spotId;
     private String reservedBy;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private boolean needsEVCharging;
-    private List<String> teamMembers;
 }

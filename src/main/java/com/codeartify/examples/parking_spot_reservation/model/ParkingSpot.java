@@ -14,15 +14,10 @@ public class ParkingSpot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private boolean isAvailable;
 
-    private boolean hasEVCharging;
-
-
-    public ParkingSpot(boolean isAvailable, boolean hasEVCharging) {
+    public ParkingSpot(boolean isAvailable ) {
         this.isAvailable = isAvailable;
-        this.hasEVCharging = hasEVCharging;
     }
 
     public ParkingSpot() {

@@ -1,14 +1,13 @@
-CREATE TABLE parking_spot (
+CREATE TABLE PARKING_SPOT (
                               id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                              is_available BOOLEAN NOT NULL,
-                              has_ev_charging BOOLEAN NOT NULL
+                              is_available BOOLEAN NOT NULL
 );
 
-CREATE TABLE parking_reservation (
+CREATE TABLE PARKING_RESERVATION (
                                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                      reserved_by VARCHAR(255) NOT NULL,
                                      spot_id BIGINT NOT NULL,
                                      start_time TIMESTAMP NOT NULL,
                                      end_time TIMESTAMP NOT NULL,
-                                     FOREIGN KEY (spot_id) REFERENCES parking_spot(id)
+                                     FOREIGN KEY (spot_id) REFERENCES PARKING_SPOT(id)
 );

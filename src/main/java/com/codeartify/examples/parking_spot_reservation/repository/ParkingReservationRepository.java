@@ -10,7 +10,13 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface ParkingReservationRepository extends JpaRepository<ParkingReservation, Long> {
-    @Query("SELECT COUNT(r) > 0 FROM ParkingReservation r WHERE r.reservedBy = :member AND " +
-            "r.startTime < :endTime AND r.endTime > :startTime")
-    boolean hasConflict(@Param("member") String member, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
+    @Query("SELECT COUNT(r) > 0 FROM ParkingReservation r " +
+            "WHERE r.reservedBy = :reservedBy " +
+            "AND r.startTime < :endTime " +
+            "AND r.endTime > :startTime")
+    boolean hasActiveReservation(@Param("reservedBy") String reservedBy,
+                                 @Param("startTime") LocalDateTime startTime,
+                                 @Param("endTime") LocalDateTime endTime);
 }
+
+

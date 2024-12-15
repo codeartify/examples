@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, Long> {
-    @Query("SELECT p FROM ParkingSpot p WHERE p.isAvailable = true ORDER BY FUNCTION('RAND')")
-    ParkingSpot findRandomAvailableSpot();
+    @Query("SELECT p FROM ParkingSpot p WHERE p.isAvailable = true ORDER BY FUNCTION('RAND') LIMIT 1")
+    ParkingSpot findAnyAvailableSpot();
 }
