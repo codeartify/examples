@@ -31,22 +31,56 @@ public class ParkingSpotReservationService {
         var startTime = request.getStartTime();
         var endTime = request.getEndTime();
 
+        Long reservationId = null;
+        try {
+            reservationId = reserveParkingSpot2(startTime, endTime, reservingMember);
+        } catch (RuntimeException e) {
+            if (e instanceof ReservationShorterThan30MinutesException) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Reservation must be at least 30 minutes long.");
+            }
+            if (e instanceof EndTimeMustBeAfterStartTimeException) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("End time must be after start time.");
+            }
+            if (e instanceof ReservationOutsideOperatingHoursException) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Reservations can only be made between 6:00 AM and 10:00 PM.");
+            }
+            if (e instanceof ActiveReservationExistsException) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("You already have an active reservation.");
+            }
+            if (e instanceof NoAvailableSpotsException) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No available spot left.");
+            }
+        }
+
+        // Build and return the response
+        var response = new ParkingReservationResponse();
+        response.setReservationId(reservationId);
+        response.setReservedBy(reservingMember);
+        response.setStartTime(startTime);
+        response.setEndTime(endTime);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    private Long reserveParkingSpot2(LocalDateTime startTime, LocalDateTime endTime, String reservingMember) {
         // Validate reservation duration
         if (Duration.between(startTime, endTime).toMinutes() < 30) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Reservation must be at least 30 minutes long.");
+            throw new ReservationShorterThan30MinutesException();
         }
 
         // Ensure the end time is after the start time
         if (endTime.isBefore(startTime)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("End time must be after start time.");
+            throw new EndTimeMustBeAfterStartTimeException();
         }
 
         // Ensure reservation is within operating hours
         if (startTime.toLocalTime().isBefore(OPENING_TIME) || endTime.toLocalTime().isAfter(CLOSING_TIME)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Reservations can only be made between 6:00 AM and 10:00 PM.");
+            throw new ReservationOutsideOperatingHoursException();
         }
 
         // Check if the user already has an active reservation
@@ -54,15 +88,14 @@ public class ParkingSpotReservationService {
                 .hasActiveReservation(reservingMember, startTime, endTime);
 
         if (hasActiveReservation) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("You already have an active reservation.");
+            throw new ActiveReservationExistsException();
         }
 
         // Find any available spot
         ParkingSpot spot = this.parkingSpotRepository.findAnyAvailableSpot();
 
         if (spot == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No available spot left.");
+            throw new NoAvailableSpotsException();
         }
 
         // Create and save the reservation
@@ -77,16 +110,7 @@ public class ParkingSpotReservationService {
         spot.setAvailable(false);
         this.parkingSpotRepository.save(spot);
 
-        var reservationId = reservation.getId();
-
-        // Build and return the response
-        var response = new ParkingReservationResponse();
-        response.setReservationId(reservationId);
-        response.setReservedBy(reservingMember);
-        response.setStartTime(startTime);
-        response.setEndTime(endTime);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return reservation.getId();
     }
 }
 
