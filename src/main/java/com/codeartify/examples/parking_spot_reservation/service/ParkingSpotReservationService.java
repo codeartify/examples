@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Service
@@ -26,27 +27,31 @@ public class ParkingSpotReservationService {
 
     @Transactional
     public ResponseEntity<Object> reserveParkingSpot(ParkingReservationRequest request) {
+        var reservingMember = request.getReservedBy();
+        var startTime = request.getStartTime();
+        var endTime = request.getEndTime();
+
         // Validate reservation duration
-        if (Duration.between(request.getStartTime(), request.getEndTime()).toMinutes() < 30) {
+        if (Duration.between(startTime, endTime).toMinutes() < 30) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Reservation must be at least 30 minutes long.");
         }
 
         // Ensure the end time is after the start time
-        if (request.getEndTime().isBefore(request.getStartTime())) {
+        if (endTime.isBefore(startTime)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("End time must be after start time.");
         }
 
         // Ensure reservation is within operating hours
-        if (request.getStartTime().toLocalTime().isBefore(OPENING_TIME) || request.getEndTime().toLocalTime().isAfter(CLOSING_TIME)) {
+        if (startTime.toLocalTime().isBefore(OPENING_TIME) || endTime.toLocalTime().isAfter(CLOSING_TIME)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Reservations can only be made between 6:00 AM and 10:00 PM.");
         }
 
         // Check if the user already has an active reservation
         boolean hasActiveReservation = parkingReservationRepository
-                .hasActiveReservation(request.getReservedBy(), request.getStartTime(), request.getEndTime());
+                .hasActiveReservation(reservingMember, startTime, endTime);
 
         if (hasActiveReservation) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -62,22 +67,24 @@ public class ParkingSpotReservationService {
 
         // Create and save the reservation
         ParkingReservation reservation = new ParkingReservation(
-                request.getReservedBy(),
+                reservingMember,
                 spot.getId(),
-                request.getStartTime(),
-                request.getEndTime());
+                startTime,
+                endTime);
         this.parkingReservationRepository.save(reservation);
 
         // Mark the parking spot as unavailable
         spot.setAvailable(false);
         this.parkingSpotRepository.save(spot);
 
+        var reservationId = reservation.getId();
+
         // Build and return the response
         var response = new ParkingReservationResponse();
-        response.setReservationId(reservation.getId());
-        response.setReservedBy(request.getReservedBy());
-        response.setStartTime(request.getStartTime());
-        response.setEndTime(request.getEndTime());
+        response.setReservationId(reservationId);
+        response.setReservedBy(reservingMember);
+        response.setStartTime(startTime);
+        response.setEndTime(endTime);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
