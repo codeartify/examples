@@ -2,8 +2,6 @@ package com.codeartify.examples.parking_spot_reservation.service;
 
 import com.codeartify.examples.parking_spot_reservation.data_access.ParkingReservationRepositoryAdapter;
 import com.codeartify.examples.parking_spot_reservation.data_access.ParkingSpotRepositoryAdapter;
-import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationDBEntityRepository;
-import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotDBEntityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
