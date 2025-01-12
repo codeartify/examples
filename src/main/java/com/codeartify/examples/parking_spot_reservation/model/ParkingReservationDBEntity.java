@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "parking_reservation")
-public class ParkingReservation {
+public class ParkingReservationDBEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,14 +24,14 @@ public class ParkingReservation {
 
     private LocalDateTime endTime;
 
-    public ParkingReservation(String reservedBy, Long spotId, LocalDateTime startTime, LocalDateTime endTime) {
+    public ParkingReservationDBEntity(String reservedBy, Long spotId, LocalDateTime startTime, LocalDateTime endTime) {
         this.reservedBy = reservedBy;
         this.spotId = spotId;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public ParkingReservation() {
+    public ParkingReservationDBEntity() {
 
     }
 }

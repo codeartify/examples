@@ -1,9 +1,9 @@
 package com.codeartify.examples.parking_spot_reservation.service;
 
-import com.codeartify.examples.parking_spot_reservation.model.ParkingReservation;
-import com.codeartify.examples.parking_spot_reservation.model.ParkingSpot;
-import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationRepository;
-import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotRepository;
+import com.codeartify.examples.parking_spot_reservation.data_access.ParkingReservationRepositoryAdapter;
+import com.codeartify.examples.parking_spot_reservation.data_access.ParkingSpotRepositoryAdapter;
+import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationDBEntityRepository;
+import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotDBEntityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +15,8 @@ import java.time.LocalTime;
 @Service
 @AllArgsConstructor
 public class ParkingSpotReservationService {
-    private final ParkingReservationRepository parkingReservationRepository;
-    private final ParkingSpotRepository parkingSpotRepository;
+    private final ParkingReservationRepositoryAdapter parkingReservationRepository;
+    private final ParkingSpotRepositoryAdapter parkingSpotRepository;
 
     private static final LocalTime OPENING_TIME = LocalTime.of(6, 0); // 6:00 AM
     private static final LocalTime CLOSING_TIME = LocalTime.of(22, 0); // 10:00 PM
@@ -36,33 +36,19 @@ public class ParkingSpotReservationService {
             throw new ReservationOutsideOperatingHoursException();
         }
         // Check if the user already has an active reservation
-        boolean hasActiveReservation = parkingReservationRepository
-                .hasActiveReservation(reservingMember, startTime, endTime);
+        var hasActiveReservation = parkingReservationRepository.hasActiveReservation(startTime, endTime, reservingMember);
 
         if (hasActiveReservation) {
             throw new ActiveReservationExistsException();
         }
 
         // Find any available spot
-        ParkingSpot spot = this.parkingSpotRepository.findAnyAvailableSpot();
-
-        if (spot == null) {
-            throw new NoAvailableSpotsException();
-        }
+        var spot = parkingSpotRepository.findAnyAvailableSpot()
+                .orElseThrow(NoAvailableSpotsException::new);
 
         // Create and save the reservation
-        ParkingReservation reservation = new ParkingReservation(
-                reservingMember,
-                spot.getId(),
-                startTime,
-                endTime);
-        this.parkingReservationRepository.save(reservation);
-
-        // Mark the parking spot as unavailable
-        spot.setAvailable(false);
-        this.parkingSpotRepository.save(spot);
-
-        return reservation.getId();
+        return parkingReservationRepository.storeReservation(startTime, endTime, reservingMember, spot);
     }
+
 }
 

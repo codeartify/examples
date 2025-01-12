@@ -7,17 +7,17 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "parking_spot")
-public class ParkingSpot {
+public class ParkingSpotDBEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private boolean isAvailable;
 
-    public ParkingSpot(boolean isAvailable ) {
+    public ParkingSpotDBEntity(boolean isAvailable ) {
         this.isAvailable = isAvailable;
     }
 
-    public ParkingSpot() {
+    public ParkingSpotDBEntity() {
     }
 }
