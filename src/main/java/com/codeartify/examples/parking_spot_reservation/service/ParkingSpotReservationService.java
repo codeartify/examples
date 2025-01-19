@@ -1,7 +1,5 @@
 package com.codeartify.examples.parking_spot_reservation.service;
 
-import com.codeartify.examples.parking_spot_reservation.data_access.ParkingReservationRepositoryAdapter;
-import com.codeartify.examples.parking_spot_reservation.data_access.ParkingSpotRepositoryAdapter;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +11,8 @@ import java.time.LocalTime;
 @Service
 @AllArgsConstructor
 public class ParkingSpotReservationService {
-    private final ParkingReservationRepositoryAdapter parkingReservationRepository;
-    private final ParkingSpotRepositoryAdapter parkingSpotRepository;
+    private final ParkingReservationRepository parkingReservationRepository;
+    private final ParkingSpotRepository parkingSpotRepository;
 
     private static final LocalTime OPENING_TIME = LocalTime.of(6, 0); // 6:00 AM
     private static final LocalTime CLOSING_TIME = LocalTime.of(22, 0); // 10:00 PM

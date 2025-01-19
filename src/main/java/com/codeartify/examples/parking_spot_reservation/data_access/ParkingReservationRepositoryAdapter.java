@@ -3,6 +3,7 @@ package com.codeartify.examples.parking_spot_reservation.data_access;
 import com.codeartify.examples.parking_spot_reservation.model.ParkingReservationDBEntity;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationDBEntityRepository;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotDBEntityRepository;
+import com.codeartify.examples.parking_spot_reservation.service.ParkingReservationRepository;
 import com.codeartify.examples.parking_spot_reservation.service.ParkingSpot;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,10 +12,11 @@ import java.time.LocalDateTime;
 
 @Repository
 @AllArgsConstructor
-public class ParkingReservationRepositoryAdapter {
+public class ParkingReservationRepositoryAdapter implements ParkingReservationRepository {
     private ParkingReservationDBEntityRepository parkingReservationDBEntityRepository;
     private ParkingSpotDBEntityRepository parkingSpotDBEntityRepository;
 
+    @Override
     public Long storeReservation(LocalDateTime startTime, LocalDateTime endTime, String reservingMember, ParkingSpot spot) {
         var spotId = spot.id();
         ParkingReservationDBEntity reservation = new ParkingReservationDBEntity(reservingMember, spotId, startTime, endTime);
@@ -29,6 +31,7 @@ public class ParkingReservationRepositoryAdapter {
         return reservation.getId();
     }
 
+    @Override
     public boolean hasActiveReservation(LocalDateTime startTime, LocalDateTime endTime, String reservingMember) {
         return this.parkingReservationDBEntityRepository
                 .hasActiveReservation(reservingMember, startTime, endTime);
