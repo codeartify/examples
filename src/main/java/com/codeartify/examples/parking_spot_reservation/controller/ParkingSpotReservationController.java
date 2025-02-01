@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ParkingSpotReservationController {
 
-    private final ParkingSpotReservationService parkingSpotReservationService;
+    private final ForReservingParkingSpots forReservingParkingSpots;
 
     @PostMapping("/reserveSpot")
     public ResponseEntity<Object> reserveParkingSpot(@RequestBody ParkingReservationRequest request) {
@@ -24,7 +24,7 @@ public class ParkingSpotReservationController {
 
         Long reservationId = null;
         try {
-            reservationId = parkingSpotReservationService.reserveParkingSpot(startTime, endTime, reservingMember);
+            reservationId = forReservingParkingSpots.reserveParkingSpot(startTime, endTime, reservingMember);
         } catch (RuntimeException e) {
             if (e instanceof ReservationShorterThan30MinutesException) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)

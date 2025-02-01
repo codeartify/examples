@@ -10,14 +10,16 @@ import java.time.LocalTime;
 
 @Service
 @AllArgsConstructor
-public class ParkingSpotReservationService {
-    private final ParkingReservationRepository parkingReservationRepository;
-    private final ParkingSpotRepository parkingSpotRepository;
+public class ParkingSpotReservationService implements ForReservingParkingSpots {
+    private final ForCheckingActiveReservations forCheckingActiveReservations;
+    private final ForStoringReservations forStoringReservations;
+    private final ForFindingAvailableParkingSpots forFindingAvailableParkingSpots;
 
     private static final LocalTime OPENING_TIME = LocalTime.of(6, 0); // 6:00 AM
     private static final LocalTime CLOSING_TIME = LocalTime.of(22, 0); // 10:00 PM
 
     @Transactional
+    @Override
     public Long reserveParkingSpot(LocalDateTime startTime, LocalDateTime endTime, String reservingMember) {
         // Validate reservation duration
         if (Duration.between(startTime, endTime).toMinutes() < 30) {
@@ -32,18 +34,18 @@ public class ParkingSpotReservationService {
             throw new ReservationOutsideOperatingHoursException();
         }
         // Check if the user already has an active reservation
-        var hasActiveReservation = parkingReservationRepository.hasActiveReservation(startTime, endTime, reservingMember);
+        var hasActiveReservation = forCheckingActiveReservations.hasActiveReservation(startTime, endTime, reservingMember);
 
         if (hasActiveReservation) {
             throw new ActiveReservationExistsException();
         }
 
         // Find any available spot
-        var spot = parkingSpotRepository.findAnyAvailableSpot()
+        var spot = forFindingAvailableParkingSpots.findAnyAvailableSpot()
                 .orElseThrow(NoAvailableSpotsException::new);
 
         // Create and save the reservation
-        return parkingReservationRepository.storeReservation(startTime, endTime, reservingMember, spot);
+        return forStoringReservations.storeReservation(startTime, endTime, reservingMember, spot);
     }
 
 }

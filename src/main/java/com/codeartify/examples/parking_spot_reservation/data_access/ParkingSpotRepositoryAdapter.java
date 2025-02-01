@@ -3,7 +3,7 @@ package com.codeartify.examples.parking_spot_reservation.data_access;
 import com.codeartify.examples.parking_spot_reservation.model.ParkingSpotDBEntity;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotDBEntityRepository;
 import com.codeartify.examples.parking_spot_reservation.service.ParkingSpot;
-import com.codeartify.examples.parking_spot_reservation.service.ParkingSpotRepository;
+import com.codeartify.examples.parking_spot_reservation.service.ForFindingAvailableParkingSpots;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
-public class ParkingSpotRepositoryAdapter implements ParkingSpotRepository {
+public class ParkingSpotRepositoryAdapter implements ForFindingAvailableParkingSpots {
     private final ParkingSpotDBEntityRepository parkingSpotDBEntityRepository;
 
     @Override

@@ -3,7 +3,8 @@ package com.codeartify.examples.parking_spot_reservation.data_access;
 import com.codeartify.examples.parking_spot_reservation.model.ParkingReservationDBEntity;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationDBEntityRepository;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotDBEntityRepository;
-import com.codeartify.examples.parking_spot_reservation.service.ParkingReservationRepository;
+import com.codeartify.examples.parking_spot_reservation.service.ForCheckingActiveReservations;
+import com.codeartify.examples.parking_spot_reservation.service.ForStoringReservations;
 import com.codeartify.examples.parking_spot_reservation.service.ParkingSpot;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Repository
 @AllArgsConstructor
-public class ParkingReservationRepositoryAdapter implements ParkingReservationRepository {
+public class ParkingReservationRepositoryAdapter implements ForStoringReservations, ForCheckingActiveReservations {
     private ParkingReservationDBEntityRepository parkingReservationDBEntityRepository;
     private ParkingSpotDBEntityRepository parkingSpotDBEntityRepository;
 
