@@ -3,13 +3,9 @@ package com.codeartify.examples.parking_spot_reservation.data_access;
 import com.codeartify.examples.parking_spot_reservation.model.ParkingReservationDBEntity;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationDBEntityRepository;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotDBEntityRepository;
-import com.codeartify.examples.parking_spot_reservation.service.ForCheckingActiveReservations;
-import com.codeartify.examples.parking_spot_reservation.service.ForStoringReservations;
-import com.codeartify.examples.parking_spot_reservation.service.ParkingSpot;
+import com.codeartify.examples.parking_spot_reservation.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
 
 @Repository
 @AllArgsConstructor
@@ -18,23 +14,27 @@ public class ParkingReservationRepositoryAdapter implements ForStoringReservatio
     private ParkingSpotDBEntityRepository parkingSpotDBEntityRepository;
 
     @Override
-    public Long storeReservation(LocalDateTime startTime, LocalDateTime endTime, String reservingMember, ParkingSpot spot) {
-        var spotId = spot.id();
-        ParkingReservationDBEntity reservation = new ParkingReservationDBEntity(reservingMember, spotId, startTime, endTime);
-        this.parkingReservationDBEntityRepository.save(reservation);
+    public ReservationId storeReservation(Reservation reservation) {
+        var spotId = reservation.spot().id();
+        var reservedBy = reservation.reservationDetails().reservingMember().reservingMember();
+        var startTime = reservation.reservationDetails().reservationPeriod().startTime();
+        var endTime = reservation.reservationDetails().reservationPeriod().endTime();
+
+        ParkingReservationDBEntity reservationDbEntity = new ParkingReservationDBEntity(reservedBy, spotId, startTime, endTime);
+        this.parkingReservationDBEntityRepository.save(reservationDbEntity);
 
         // Mark the parking spot as unavailable
-        this.parkingSpotDBEntityRepository.findById(spot.id()).ifPresent(s -> {
+        this.parkingSpotDBEntityRepository.findById(reservation.spot().id()).ifPresent(s -> {
             s.setAvailable(false);
             this.parkingSpotDBEntityRepository.save(s);
         });
 
-        return reservation.getId();
+        return new ReservationId(reservationDbEntity.getId());
     }
 
     @Override
-    public boolean hasActiveReservation(LocalDateTime startTime, LocalDateTime endTime, String reservingMember) {
+    public boolean hasActiveReservation(ReservationDetails reservationDetails) {
         return this.parkingReservationDBEntityRepository
-                .hasActiveReservation(reservingMember, startTime, endTime);
+                .hasActiveReservation(reservationDetails.reservingMember().reservingMember(), reservationDetails.reservationPeriod().startTime(), reservationDetails.reservationPeriod().endTime());
     }
 }

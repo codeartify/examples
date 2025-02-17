@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Service
@@ -20,21 +19,21 @@ public class ParkingSpotReservationService implements ForReservingParkingSpots {
 
     @Transactional
     @Override
-    public Long reserveParkingSpot(LocalDateTime startTime, LocalDateTime endTime, String reservingMember) {
+    public ReservationId reserveParkingSpot(ReservationDetails reservationDetails) {
         // Validate reservation duration
-        if (Duration.between(startTime, endTime).toMinutes() < 30) {
+        if (Duration.between(reservationDetails.reservationPeriod().startTime(), reservationDetails.reservationPeriod().endTime()).toMinutes() < 30) {
             throw new ReservationShorterThan30MinutesException();
         }
         // Ensure the end time is after the start time
-        if (endTime.isBefore(startTime)) {
+        if (reservationDetails.reservationPeriod().endTime().isBefore(reservationDetails.reservationPeriod().startTime())) {
             throw new EndTimeMustBeAfterStartTimeException();
         }
         // Ensure reservation is within operating hours
-        if (startTime.toLocalTime().isBefore(OPENING_TIME) || endTime.toLocalTime().isAfter(CLOSING_TIME)) {
+        if (reservationDetails.reservationPeriod().startTime().toLocalTime().isBefore(OPENING_TIME) || reservationDetails.reservationPeriod().endTime().toLocalTime().isAfter(CLOSING_TIME)) {
             throw new ReservationOutsideOperatingHoursException();
         }
         // Check if the user already has an active reservation
-        var hasActiveReservation = forCheckingActiveReservations.hasActiveReservation(startTime, endTime, reservingMember);
+        var hasActiveReservation = forCheckingActiveReservations.hasActiveReservation(reservationDetails);
 
         if (hasActiveReservation) {
             throw new ActiveReservationExistsException();
@@ -45,7 +44,9 @@ public class ParkingSpotReservationService implements ForReservingParkingSpots {
                 .orElseThrow(NoAvailableSpotsException::new);
 
         // Create and save the reservation
-        return forStoringReservations.storeReservation(startTime, endTime, reservingMember, spot);
+        var reservation = new Reservation(reservationDetails, spot);
+
+        return forStoringReservations.storeReservation(reservation);
     }
 
 }

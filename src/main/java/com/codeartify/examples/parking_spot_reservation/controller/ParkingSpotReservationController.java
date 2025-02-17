@@ -22,9 +22,12 @@ public class ParkingSpotReservationController {
         var startTime = request.getStartTime();
         var endTime = request.getEndTime();
 
-        Long reservationId = null;
+        ReservationId reservationId = null;
         try {
-            reservationId = forReservingParkingSpots.reserveParkingSpot(startTime, endTime, reservingMember);
+            var reservationPeriod = new ReservationPeriod(startTime, endTime);
+            var member = new ReservingMember(reservingMember);
+            var reservationDetails = new ReservationDetails(reservationPeriod, member);
+            reservationId = forReservingParkingSpots.reserveParkingSpot(reservationDetails);
         } catch (RuntimeException e) {
             if (e instanceof ReservationShorterThan30MinutesException) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -50,7 +53,7 @@ public class ParkingSpotReservationController {
 
         // Build and return the response
         var response = new ParkingReservationResponse();
-        response.setReservationId(reservationId);
+        response.setReservationId(reservationId.value());
         response.setReservedBy(reservingMember);
         response.setStartTime(startTime);
         response.setEndTime(endTime);
