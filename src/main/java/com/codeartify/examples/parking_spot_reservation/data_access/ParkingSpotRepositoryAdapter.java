@@ -2,7 +2,7 @@ package com.codeartify.examples.parking_spot_reservation.data_access;
 
 import com.codeartify.examples.parking_spot_reservation.model.ParkingSpotDBEntity;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotDBEntityRepository;
-import com.codeartify.examples.parking_spot_reservation.service.ParkingSpot;
+import com.codeartify.examples.parking_spot_reservation.service.ParkingSpotId;
 import com.codeartify.examples.parking_spot_reservation.service.ForFindingAvailableParkingSpots;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,12 +15,12 @@ public class ParkingSpotRepositoryAdapter implements ForFindingAvailableParkingS
     private final ParkingSpotDBEntityRepository parkingSpotDBEntityRepository;
 
     @Override
-    public Optional<ParkingSpot> findAnyAvailableSpot() {
+    public Optional<ParkingSpotId> findAnyAvailableSpot() {
         ParkingSpotDBEntity spot = parkingSpotDBEntityRepository.findAnyAvailableSpot();
 
-        Optional<ParkingSpot> spotOptional = Optional.empty();
+        Optional<ParkingSpotId> spotOptional = Optional.empty();
         if(spot != null) {
-            spotOptional = Optional.of(new ParkingSpot(spot.getId()));
+            spotOptional = Optional.of(new ParkingSpotId(spot.getId()));
         }
         return spotOptional;
     }

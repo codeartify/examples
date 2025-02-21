@@ -15,7 +15,7 @@ public class ParkingReservationRepositoryAdapter implements ForStoringReservatio
 
     @Override
     public ReservationId storeReservation(Reservation reservation) {
-        var spotId = reservation.spot().id();
+        var spotId = reservation.parkingSpotId().value();
         var reservedBy = reservation.reservationDetails().reservingMember().reservingMember();
         var startTime = reservation.reservationDetails().reservationPeriod().startTime();
         var endTime = reservation.reservationDetails().reservationPeriod().endTime();
@@ -23,8 +23,8 @@ public class ParkingReservationRepositoryAdapter implements ForStoringReservatio
         ParkingReservationDBEntity reservationDbEntity = new ParkingReservationDBEntity(reservedBy, spotId, startTime, endTime);
         this.parkingReservationDBEntityRepository.save(reservationDbEntity);
 
-        // Mark the parking spot as unavailable
-        this.parkingSpotDBEntityRepository.findById(reservation.spot().id()).ifPresent(s -> {
+        // Mark the parking parkingSpotId as unavailable
+        this.parkingSpotDBEntityRepository.findById(reservation.parkingSpotId().value()).ifPresent(s -> {
             s.setAvailable(false);
             this.parkingSpotDBEntityRepository.save(s);
         });
