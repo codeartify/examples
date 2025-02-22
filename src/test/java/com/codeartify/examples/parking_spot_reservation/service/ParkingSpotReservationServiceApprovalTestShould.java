@@ -6,6 +6,11 @@ import com.codeartify.examples.parking_spot_reservation.model.ParkingSpot;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationRepository;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotRepository;
 import org.approvaltests.combinations.CombinationApprovals;
+import org.approvaltests.core.Options;
+import org.approvaltests.reporters.AutoApproveReporter;
+import org.approvaltests.reporters.FileCaptureReporter;
+import org.approvaltests.reporters.FileLauncherReporter;
+import org.approvaltests.reporters.UseReporter;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -14,11 +19,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 class ParkingSpotReservationServiceApprovalTestShould {
 
     @Test
-    void test() {
-
+    void test() { 
         CombinationApprovals.verifyAllCombinations(
                 ParkingSpotReservationServiceApprovalTestShould::method,
                 new ParkingReservationRequest[]{
@@ -41,24 +46,28 @@ class ParkingSpotReservationServiceApprovalTestShould {
     private ParkingSpotRepository findSpot() {
         var mock = mock(ParkingSpotRepository.class);
         when(mock.findAnyAvailableSpot()).thenReturn(new ParkingSpot(true));
+        when(mock.toString()).thenReturn("");
         return mock;
     }
 
     private static ParkingSpotRepository findNoSpot() {
         var mock = mock(ParkingSpotRepository.class);
         when(mock.findAnyAvailableSpot()).thenReturn(null);
+        when(mock.toString()).thenReturn("");
         return mock;
     }
 
     private static ParkingReservationRepository withoutActiveReservation() {
         var mock = mock(ParkingReservationRepository.class);
         when(mock.hasActiveReservation(any(), any(), any())).thenReturn(false);
+        when(mock.toString()).thenReturn("");
         return mock;
     }
 
     private static ParkingReservationRepository withActiveReservation() {
         var mock = mock(ParkingReservationRepository.class);
         when(mock.hasActiveReservation(any(), any(), any())).thenReturn(true);
+        when(mock.toString()).thenReturn("");
         return mock;
     }
 
