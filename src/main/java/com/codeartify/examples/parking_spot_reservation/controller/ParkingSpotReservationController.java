@@ -24,12 +24,10 @@ public class ParkingSpotReservationController {
 
         ReservationId reservationId = null;
         try {
-            var reservationPeriod = new ReservationPeriod(startTime, endTime);
-            var member = new ReservingMember(reservingMember);
-            var reservationDetails = new ReservationDetails(reservationPeriod, member);
+            var reservationDetails = ReservationDetails.create(startTime, endTime, reservingMember);
             reservationId = forReservingParkingSpots.reserveParkingSpot(reservationDetails);
         } catch (RuntimeException e) {
-            if (e instanceof ReservationShorterThan30MinutesException) {
+            if (e instanceof ReservationShorterThanMinimalReservationDurationException) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Reservation must be at least 30 minutes long.");
             }
