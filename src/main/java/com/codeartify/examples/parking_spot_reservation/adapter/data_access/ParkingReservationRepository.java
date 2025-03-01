@@ -4,10 +4,9 @@ import com.codeartify.examples.parking_spot_reservation.model.ParkingReservation
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingReservationDbEntityRepository;
 import com.codeartify.examples.parking_spot_reservation.repository.ParkingSpotDbEntityRepository;
 import com.codeartify.examples.parking_spot_reservation.service.ParkingReservation;
+import com.codeartify.examples.parking_spot_reservation.service.ReservationPeriod;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
 
 @Repository
 @AllArgsConstructor
@@ -15,8 +14,8 @@ public class ParkingReservationRepository {
     private final ParkingReservationDbEntityRepository parkingReservationDbEntityRepository;
     private final ParkingSpotDbEntityRepository parkingSpotDbEntityRepository;
 
-    public boolean hasActiveReservation(LocalDateTime startTime, LocalDateTime endTime, String reservingMember) {
-        return this.parkingReservationDbEntityRepository.hasActiveReservation(reservingMember, startTime, endTime);
+    public boolean hasActiveReservation(ReservationPeriod reservationPeriod, String reservingMember) {
+        return this.parkingReservationDbEntityRepository.hasActiveReservation(reservingMember, reservationPeriod.getStartTime(), reservationPeriod.getEndTime());
     }
 
     public ParkingReservation storeParkingReservation(ParkingReservation parkingReservation) {
@@ -38,8 +37,7 @@ public class ParkingReservationRepository {
 
         return new ParkingReservation(
                 reservationDbEntity.getSpotId(), 
-                reservationDbEntity.getReservedBy(), 
-                reservationDbEntity.getStartTime(), 
-                reservationDbEntity.getEndTime());
+                reservationDbEntity.getReservedBy(),
+            ReservationPeriod.create(reservationDbEntity.getStartTime(), reservationDbEntity.getEndTime()));
     }
 }

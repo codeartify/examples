@@ -10,11 +10,11 @@ public final class ParkingReservation {
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
 
-    public ParkingReservation(Long parkingSpotId, String reservingMember, LocalDateTime startTime, LocalDateTime endTime) {
+    public ParkingReservation(Long parkingSpotId, String reservingMember, ReservationPeriod reservationPeriod) {
         this.parkingSpotId = parkingSpotId;
         this.reservingMember = reservingMember;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startTime = reservationPeriod.getStartTime();
+        this.endTime = reservationPeriod.getEndTime();
     }
 
     public void setId(Long id) {

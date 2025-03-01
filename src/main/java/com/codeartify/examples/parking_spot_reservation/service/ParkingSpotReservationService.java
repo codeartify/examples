@@ -15,27 +15,13 @@ public class ParkingSpotReservationService {
     private final ParkingReservationRepository parkingReservationRepository;
     private final ParkingSpotRepositoryAdapter parkingSpotRepository;
 
-
-    private static final LocalTime OPENING_TIME = LocalTime.of(6, 0); // 6:00 AM
-    private static final LocalTime CLOSING_TIME = LocalTime.of(22, 0); // 10:00 PM
-
+ 
     @Transactional
     public ParkingReservationResult reserveParkingSpot(LocalDateTime startTime, LocalDateTime endTime, String reservingMember) {
-        // Validate reservation duration
-        if (Duration.between(startTime, endTime).toMinutes() < 30) {
-            throw new ReservationTimeShorterThanMinimalTime();
-        }
-        // Ensure the end time is after the start time
-        if (endTime.isBefore(startTime)) {
-            throw new EndTimeBeforeStartTimeException();
-        }
-        // Ensure reservation is within operating hours
-        if (startTime.toLocalTime().isBefore(OPENING_TIME)
-                || endTime.toLocalTime().isAfter(CLOSING_TIME)) {
-            throw new ReservationOutsideOperatingTimeException();
-        }
+ 
         // Check if the user already has an active reservation
-        var hasActiveReservation = parkingReservationRepository.hasActiveReservation(startTime, endTime, reservingMember);
+        var reservationPeriod = ReservationPeriod.create(startTime, endTime);
+        var hasActiveReservation = parkingReservationRepository.hasActiveReservation(reservationPeriod, reservingMember);
 
         if (hasActiveReservation) {
             throw new ActiveReservationException();
@@ -44,7 +30,7 @@ public class ParkingSpotReservationService {
         // Find any available spot
         var parkingSpotId = parkingSpotRepository.findAnyAvailableSpot();
 
-        var parkingReservation = new ParkingReservation(parkingSpotId, reservingMember, startTime, endTime);
+        var parkingReservation = new ParkingReservation(parkingSpotId, reservingMember, reservationPeriod);
 
         var storedReservation = parkingReservationRepository.storeParkingReservation(parkingReservation);
 
