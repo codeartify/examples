@@ -1,22 +1,22 @@
 package com.codeartify.examples.parking_spot_reservation.service;
 import com.codeartify.examples.parking_spot_reservation.adapter.data_access.ParkingReservationRepository;
-import com.codeartify.examples.parking_spot_reservation.adapter.data_access.ParkingSpotRepositoryAdapter;
+import com.codeartify.examples.parking_spot_reservation.service.port.out.FindAnyAvailableSpot;
+import com.codeartify.examples.parking_spot_reservation.service.port.in.ReserveParkingSpot;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Service
 @AllArgsConstructor
-public class ParkingSpotReservationService {
+public class ParkingSpotReservationService implements ReserveParkingSpot {
     private final ParkingReservationRepository parkingReservationRepository;
-    private final ParkingSpotRepositoryAdapter parkingSpotRepository;
+    private final FindAnyAvailableSpot parkingSpotRepository;
 
  
     @Transactional
+    @Override
     public ParkingReservationResult reserveParkingSpot(LocalDateTime startTime, LocalDateTime endTime, String reservingMember) {
  
         // Check if the user already has an active reservation
