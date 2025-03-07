@@ -17,11 +17,11 @@ public final class ParkingReservation {
         this.endTime = endTime;
     }
 
-    public void setId(Long id) {
+    public void id(Long id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public Long id() {
         return id;
     }
 

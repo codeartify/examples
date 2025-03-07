@@ -49,7 +49,7 @@ public class ParkingSpotReservationService {
         var storedReservation = parkingReservationRepository.storeParkingReservation(parkingReservation);
 
         // Build and return the response
-        return new ParkingReservationResult(storedReservation.getId(),
+        return new ParkingReservationResult(storedReservation.id(),
                 storedReservation.reservingMember(),
                 storedReservation.startTime(),
                 storedReservation.endTime());
