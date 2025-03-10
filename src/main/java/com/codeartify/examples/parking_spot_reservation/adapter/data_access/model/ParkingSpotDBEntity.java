@@ -1,4 +1,4 @@
-package com.codeartify.examples.parking_spot_reservation.adapter.out.data_access.model;
+package com.codeartify.examples.parking_spot_reservation.adapter.data_access.model;
 
 import jakarta.persistence.*;
 import lombok.*;

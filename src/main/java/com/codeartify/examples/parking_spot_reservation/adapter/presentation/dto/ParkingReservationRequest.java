@@ -1,4 +1,4 @@
-package com.codeartify.examples.parking_spot_reservation.adapter.in.presentation.dto;
+package com.codeartify.examples.parking_spot_reservation.adapter.presentation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

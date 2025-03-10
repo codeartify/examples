@@ -1,6 +1,6 @@
-package com.codeartify.examples.parking_spot_reservation.adapter.out.data_access;
+package com.codeartify.examples.parking_spot_reservation.adapter.data_access;
 
-import com.codeartify.examples.parking_spot_reservation.adapter.out.data_access.model.ParkingReservationDBEntity;
+import com.codeartify.examples.parking_spot_reservation.adapter.data_access.model.ParkingReservationDBEntity;
 import com.codeartify.examples.parking_spot_reservation.application.port.out.ForCheckingActiveReservations;
 import com.codeartify.examples.parking_spot_reservation.application.port.out.ForStoringReservations;
 import com.codeartify.examples.parking_spot_reservation.domain.entity.Reservation;

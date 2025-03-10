@@ -1,7 +1,7 @@
-package com.codeartify.examples.parking_spot_reservation.adapter.in.presentation;
+package com.codeartify.examples.parking_spot_reservation.adapter.presentation;
 
-import com.codeartify.examples.parking_spot_reservation.adapter.in.presentation.dto.ParkingReservationRequest;
-import com.codeartify.examples.parking_spot_reservation.adapter.in.presentation.dto.ParkingReservationResponse;
+import com.codeartify.examples.parking_spot_reservation.adapter.presentation.dto.ParkingReservationRequest;
+import com.codeartify.examples.parking_spot_reservation.adapter.presentation.dto.ParkingReservationResponse;
 import com.codeartify.examples.parking_spot_reservation.application.exception.NoAvailableSpotsException;
 import com.codeartify.examples.parking_spot_reservation.application.port.in.ForReservingParkingSpots;
 import com.codeartify.examples.parking_spot_reservation.domain.exception.ActiveReservationExistsException;

@@ -1,6 +1,6 @@
-package com.codeartify.examples.parking_spot_reservation.adapter.out.data_access;
+package com.codeartify.examples.parking_spot_reservation.adapter.data_access;
 
-import com.codeartify.examples.parking_spot_reservation.adapter.out.data_access.model.ParkingSpotDBEntity;
+import com.codeartify.examples.parking_spot_reservation.adapter.data_access.model.ParkingSpotDBEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
