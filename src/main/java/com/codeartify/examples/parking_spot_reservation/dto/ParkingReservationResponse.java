@@ -8,12 +8,16 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode 
 public class ParkingReservationResponse {
     private Long reservationId;
     private Long spotId;
     private String reservedBy;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+
+    @Override
+    public String toString() {
+        return "Response[reservationId[" + reservationId + "],spotId[" + spotId + "],reservedBy[" + reservedBy + "],startTime[" + startTime + "]-endTime[" + endTime + ']';
+    }
 }
