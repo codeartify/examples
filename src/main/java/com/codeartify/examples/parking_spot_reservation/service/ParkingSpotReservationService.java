@@ -27,13 +27,18 @@ public class ParkingSpotReservationService {
     @Transactional
     public ResponseEntity<Object> reserveParkingSpot(ParkingReservationRequest request) {
         // Validate reservation duration
-        if (Duration.between(request.getStartTime(), request.getEndTime()).toMinutes() >= 30) {// Ensure the end time is after the start time
-            if (!request.getEndTime().isBefore(request.getStartTime())) {// Ensure reservation is within operating hours
-                if (!request.getStartTime().toLocalTime().isBefore(OPENING_TIME) && !request.getEndTime().toLocalTime().isAfter(CLOSING_TIME)) {// Check if the user already has an active reservation
+        if (Duration.between(request.getStartTime(), request.getEndTime()).toMinutes() >= 30) {
+            // Ensure the end time is after the start time
+            if (!request.getEndTime().isBefore(request.getStartTime())) {
+                // Ensure reservation is within operating hours
+                if (!request.getStartTime().toLocalTime().isBefore(OPENING_TIME) 
+                    && !request.getEndTime().toLocalTime().isAfter(CLOSING_TIME)) {
+                    // Check if the user already has an active reservation
                     boolean hasActiveReservation = parkingReservationRepository
                             .hasActiveReservation(request.getReservedBy(), request.getStartTime(), request.getEndTime());
 
-                    if (!hasActiveReservation) {// Find any available spot
+                    if (!hasActiveReservation) {
+                        // Find any available spot
                         ParkingSpot spot = this.parkingSpotRepository.findAnyAvailableSpot();
 
                         if (spot != null) {// Create and save the reservation
