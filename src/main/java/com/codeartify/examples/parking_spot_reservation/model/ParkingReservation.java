@@ -34,6 +34,6 @@ public class ParkingReservation {
     }
 
     public ParkingReservation() {
-
+        
     }
 }

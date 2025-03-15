@@ -19,16 +19,17 @@ import static org.mockito.Mockito.when;
 class ParkingSpotReservationServiceApprovalTestShould {
 
     @Test
-    void cover_happy_path() { 
+    void cover_reserve_parking_spot() { 
         CombinationApprovals.verifyAllCombinations(
             ParkingSpotReservationServiceApprovalTestShould::createAssertableOutput,
-                new ParkingReservationRequest[]{
-                    new ParkingReservationRequest(null,
-                        LocalDateTime.of(2020, 1, 1, 8, 0),
-                        LocalDateTime.of(2020, 1, 1, 8, 31)),
-                },
-            new ParkingReservationRepository[]{withoutActiveReservation()},
-            new ParkingSpotRepository[]{findSpot()}
+            new ParkingReservationRequest[]{
+                new ParkingReservationRequest(null, LocalDateTime.of(2025, 3, 25, 8, 0), LocalDateTime.of(2025, 3, 25, 8, 31)),
+                new ParkingReservationRequest(null, LocalDateTime.of(2025, 3, 25, 8, 0), LocalDateTime.of(2025, 3, 25, 22, 1)),
+                new ParkingReservationRequest(null, LocalDateTime.of(2025, 3, 25, 5, 59), LocalDateTime.of(2025, 3, 25, 8, 31)),
+                new ParkingReservationRequest(null, LocalDateTime.of(2025, 3, 25, 8, 0), LocalDateTime.of(2025, 3, 25, 8, 29))
+            },
+            new ParkingReservationRepository[]{withoutActiveReservation(), withActiveReservation()},
+            new ParkingSpotRepository[]{findSpot(), findNoSpot()}
         );
     }
 

@@ -21,5 +21,6 @@ public class ParkingSpot {
     }
 
     public ParkingSpot() {
+        
     }
 }
